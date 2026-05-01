@@ -70,22 +70,14 @@ exports.updateIssueStatus = async (req, res, next) => {
         issue.status = status;
         await issue.save();
 
-        // Send email notification if resolved
         if (status === 'resolved') {
-            try {
-                const sendEmail = require('../services/emailService');
-                await sendEmail({
-                    email: issue.employee.user.email,
-                    subject: `Issue Resolved: ${issue.title}`,
-                    message: `Hello ${issue.employee.user.name},\n\nYour reported issue "${issue.title}" has been marked as RESOLVED by HR.\n\nDescription: ${issue.description}\n\nThank you.`
-                });
-            } catch (emailErr) {
-                console.error('Email could not be sent:', emailErr.message);
-            }
-        }
-
-        if (status === 'resolved') {
-            await createNotification(issue.employee.user._id, 'Issue Resolved', `Your issue "${issue.title}" has been resolved.`, 'general');
+            await createNotification(
+                issue.employee.user._id, 
+                'Issue Resolved', 
+                `Your issue "${issue.title}" has been resolved.`, 
+                'issue',
+                '/issues'
+            );
         }
         res.status(200).json({ success: true, data: issue });
     } catch (err) {

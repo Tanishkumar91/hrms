@@ -79,75 +79,15 @@ exports.updatePayroll = async (req, res, next) => {
             populate: { path: 'user', select: 'name email' }
         });
 
-        // Send email with PDF if status is marked as paid
+        // In-app notification with download link
         if (status === 'paid') {
-            try {
-                const sendEmail = require('../services/emailService');
-                const PDFDocument = require('pdfkit');
-
-                // Generate PDF Buffer
-                const pdfBuffer = await new Promise((resolve) => {
-                    const doc = new PDFDocument({ margin: 50 });
-                    let buffers = [];
-                    doc.on('data', buffers.push.bind(buffers));
-                    doc.on('end', () => resolve(Buffer.concat(buffers)));
-
-                    doc.fontSize(20).text('SALARY PAYSLIP', { align: 'center' });
-                    doc.moveDown();
-                    doc.fontSize(12).text(`Month/Year: ${payroll.month}/${payroll.year}`, { align: 'right' });
-                    doc.moveDown();
-
-                    doc.fontSize(14).text('Employee Details', { underline: true });
-                    doc.fontSize(12).text(`Name: ${payroll.employee.user.name}`);
-                    doc.fontSize(12).text(`Employee ID: ${payroll.employee.employeeId}`);
-                    doc.fontSize(12).text(`Designation: ${payroll.employee.designation}`);
-                    doc.fontSize(12).text(`Department: ${payroll.employee.department}`);
-                    doc.moveDown();
-
-                    doc.fontSize(14).text('Salary Breakdown', { underline: true });
-                    doc.fontSize(12).text(`Base Salary: $${payroll.baseSalary.toLocaleString()}`);
-                    
-                    doc.text('Allowances:');
-                    payroll.allowances.forEach(a => {
-                        doc.text(`  - ${a.type || 'Other'}: $${a.amount.toLocaleString()}`);
-                    });
-
-                    doc.text('Deductions:');
-                    payroll.deductions.forEach(d => {
-                        doc.text(`  - ${d.type || 'Other'}: $${d.amount.toLocaleString()}`);
-                    });
-                    
-                    doc.moveDown();
-                    doc.fontSize(14).fillColor('green').text(`Net Salary: $${payroll.netSalary.toLocaleString()}`, { bold: true });
-                    doc.fillColor('black');
-                    doc.moveDown();
-
-                    doc.fontSize(12).text(`Status: ${payroll.status.toUpperCase()}`, { align: 'center' });
-                    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, { align: 'center' });
-
-                    doc.end();
-                });
-
-                await sendEmail({
-                    email: payroll.employee.user.email,
-                    subject: `Payslip for ${payroll.month}/${payroll.year}`,
-                    message: `Hello ${payroll.employee.user.name},\n\nYour payroll for ${payroll.month}/${payroll.year} has been processed and marked as PAID.\n\nPlease find your payslip attached.\n\nBest Regards,\nHR Team`,
-                    attachments: [
-                        {
-                            filename: `Payslip-${payroll.month}-${payroll.year}.pdf`,
-                            content: pdfBuffer,
-                            contentType: 'application/pdf'
-                        }
-                    ]
-                });
-            } catch (emailErr) {
-                console.error('Email could not be sent:', emailErr);
-            }
-        }
-
-        // Send notification if paid
-        if (status === 'paid') {
-            await createNotification(payroll.employee.user._id, 'Payroll Processed', `Your payroll for ${payroll.month}/${payroll.year} has been processed and paid.`, 'payroll');
+            await createNotification(
+                payroll.employee.user._id, 
+                'Payroll Processed', 
+                `Your payroll for ${payroll.month}/${payroll.year} has been processed and paid.`, 
+                'payroll',
+                `/payroll` // Redirect to payroll page to download
+            );
         }
 
         res.status(200).json({ success: true, data: payroll });

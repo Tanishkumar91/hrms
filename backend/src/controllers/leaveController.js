@@ -9,7 +9,7 @@ const sendEmail = require('../services/emailService');
 exports.requestLeave = async (req, res, next) => {
     try {
         let employee = await Employee.findOne({ user: req.user.id });
-        
+
         // Self-healing: Create employee profile if missing
         if (!employee && req.user.role === 'employee') {
             employee = await Employee.create({
@@ -74,18 +74,14 @@ exports.updateLeaveStatus = async (req, res, next) => {
 
         await leave.save();
 
-        // Send email notification
-        try {
-            await sendEmail({
-                email: leave.employee.user.email,
-                subject: `Leave Request ${status.charAt(0).toUpperCase() + status.slice(1)}`,
-                message: `Your leave request from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()} has been ${status}. ${rejectionReason ? 'Reason: ' + rejectionReason : ''}`
-            });
-        } catch (emailErr) {
-            console.error('Email could not be sent:', emailErr.message);
-        }
-
-        await createNotification(leave.employee.user._id, `Leave ${status}`, `Your leave request has been ${status}.`, 'leave');
+        // In-app notification with link
+        await createNotification(
+            leave.employee.user._id, 
+            `Leave ${status.charAt(0).toUpperCase() + status.slice(1)}`, 
+            `Your leave request from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()} has been ${status}.`, 
+            'leave',
+            '/leaves'
+        );
         res.status(200).json({ success: true, data: leave });
     } catch (err) {
         next(err);

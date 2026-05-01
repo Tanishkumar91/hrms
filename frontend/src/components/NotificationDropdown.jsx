@@ -113,9 +113,21 @@ const NotificationDropdown = () => {
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                                                 {notification.message}
                                             </p>
-                                            <p className="text-[10px] text-slate-400 mt-2">
-                                                {new Date(notification.createdAt).toLocaleString()}
-                                            </p>
+                                            <p className="text-[10px] text-slate-400 mt-2 flex items-center justify-between">
+                                                 {new Date(notification.createdAt).toLocaleString()}
+                                                 {notification.link && (
+                                                     <a 
+                                                         href={notification.link} 
+                                                         className="text-primary-600 hover:text-primary-700 font-semibold"
+                                                         onClick={(e) => {
+                                                             e.stopPropagation();
+                                                             setIsOpen(false);
+                                                         }}
+                                                     >
+                                                         View Details
+                                                     </a>
+                                                 )}
+                                             </p>
                                         </div>
                                     </div>
                                 </div>
