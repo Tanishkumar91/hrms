@@ -9,7 +9,6 @@ A full-stack MERN application for managing employees, attendance, leaves, payrol
 - **Attendance**: Check-in/out with location tracking.
 - **Leaves**: Multi-level approval workflow with email notifications.
 - **Payroll**: Automated salary calculation and history.
-- **Dark/Light Mode**: Full UI support for both themes.
 - **Responsive**: Beautifully designed for mobile and desktop.
 - Real-time in-app notifications for key actions (leave updates, task assignments, issue resolution).
 - Smart alerts for pending approvals, missed attendance, and upcoming deadlines.
