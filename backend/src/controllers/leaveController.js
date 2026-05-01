@@ -82,7 +82,7 @@ exports.updateLeaveStatus = async (req, res, next) => {
                 message: `Your leave request from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()} has been ${status}. ${rejectionReason ? 'Reason: ' + rejectionReason : ''}`
             });
         } catch (emailErr) {
-            console.error('Email could not be sent');
+            console.error('Email could not be sent:', emailErr.message);
         }
 
         await createNotification(leave.employee.user._id, `Leave ${status}`, `Your leave request has been ${status}.`, 'leave');

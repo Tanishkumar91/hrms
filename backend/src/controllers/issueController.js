@@ -80,7 +80,7 @@ exports.updateIssueStatus = async (req, res, next) => {
                     message: `Hello ${issue.employee.user.name},\n\nYour reported issue "${issue.title}" has been marked as RESOLVED by HR.\n\nDescription: ${issue.description}\n\nThank you.`
                 });
             } catch (emailErr) {
-                console.error('Email could not be sent');
+                console.error('Email could not be sent:', emailErr.message);
             }
         }
 
