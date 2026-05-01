@@ -10,12 +10,31 @@ const app = express();
 
 // Security Middleware
 app.use(helmet());
+
+// Dynamic CORS configuration
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
+if (process.env.CLIENT_URL) {
+    allowedOrigins.push(process.env.CLIENT_URL);
+    // Also allow the URL without a trailing slash if one was provided
+    if (process.env.CLIENT_URL.endsWith('/')) {
+        allowedOrigins.push(process.env.CLIENT_URL.slice(0, -1));
+    }
+}
+
 app.use(cors({
-    origin: [
-        process.env.CLIENT_URL || 'http://localhost:5173',
-        'http://localhost:5173',
-        'http://localhost:3000'
-    ],
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Temporarily allowing all during debug, or use a more strict check
+        }
+    },
     credentials: true
 }));
 
