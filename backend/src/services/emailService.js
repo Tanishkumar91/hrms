@@ -19,6 +19,9 @@ const sendEmail = async (options) => {
         delete transporterConfig.port;
         delete transporterConfig.secure;
         transporterConfig.service = 'gmail';
+        console.log(`[EMAIL] Using Gmail Service Preset for: ${options.email}`);
+    } else {
+        console.log(`[EMAIL] Using Manual SMTP (${process.env.EMAIL_HOST}) for: ${options.email}`);
     }
 
     const transporter = nodemailer.createTransport(transporterConfig);
@@ -37,7 +40,7 @@ const sendEmail = async (options) => {
 
     const info = await transporter.sendMail(message);
 
-    console.log('Message sent: %s', info.messageId);
+    console.log('[EMAIL] Message sent successfully! ID: %s', info.messageId);
 };
 
 module.exports = sendEmail;
