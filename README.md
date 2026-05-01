@@ -32,6 +32,8 @@ A full-stack MERN application for managing employees, attendance, leaves, payrol
 2. Run `npm install`.
 3. Start development server: `npm run dev`.
 
+## Website is Live at : <a href="https://hrms-g4w7.vercel.app">https://hrms-g4w7.vercel.app/</a>
+
 ## 📂 Project Structure
 - `backend/`: Node.js/Express API with MongoDB/Mongoose.
 - `frontend/`: React/Vite SPA with Tailwind CSS and Framer Motion.
