@@ -32,7 +32,8 @@ app.use(cors({
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            callback(null, true); // Temporarily allowing all during debug, or use a more strict check
+            console.error(`CORS blocked for origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true
