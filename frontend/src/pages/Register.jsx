@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { User, Mail, Lock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import bgImage from '../assets/hrms_bg.png';
+import toast from 'react-hot-toast';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -12,7 +13,7 @@ const Register = () => {
     const [role, setRole] = useState('employee');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { api } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -20,8 +21,8 @@ const Register = () => {
         setError('');
         setIsLoading(true);
         try {
-            await api.post('/auth/register', { name, email, password, role });
-            alert('Registration successful! Please login.');
+            await register(name, email, password, role);
+            toast.success('Account created! Please log in.');
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed.');

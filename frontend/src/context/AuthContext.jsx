@@ -8,8 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     const api = axios.create({
-        // baseURL: 'http://localhost:5000/api',
-         baseURL: 'https://hrms-platform-jkdz.onrender.com/api',
+        baseURL: import.meta.env.VITE_API_URL || '/api',
         withCredentials: true
     });
 
@@ -29,7 +28,14 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const res = await api.post('/auth/login', { email, password });
-        setUser(res.data.user);
+        // Normalise: backend returns res.data.user with shape {id,name,email,role}
+        const u = res.data.user;
+        setUser({ _id: u.id, name: u.name, email: u.email, role: u.role });
+        return res.data;
+    };
+
+    const register = async (name, email, password, role) => {
+        const res = await api.post('/auth/register', { name, email, password, role });
         return res.data;
     };
 
@@ -40,10 +46,12 @@ export const AuthProvider = ({ children }) => {
             console.error('Logout API failed');
         }
         setUser(null);
+        // Redirect to landing page
+        window.location.href = '/';
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout, api }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, register, api }}>
             {children}
         </AuthContext.Provider>
     );

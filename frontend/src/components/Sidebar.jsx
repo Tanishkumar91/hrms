@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const { user, logout } = useAuth();
 
     const menuItems = [
-        { name: 'Dashboard', path: '/', icon: LayoutDashboard, roles: ['hr', 'employee'] },
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['hr', 'employee'] },
         { name: 'Employees', path: '/employees', icon: Users, roles: ['hr'] },
         { name: 'Attendance', path: '/attendance', icon: CalendarCheck, roles: ['hr', 'employee'] },
         { name: 'Leaves', path: '/leaves', icon: FileText, roles: ['hr', 'employee'] },

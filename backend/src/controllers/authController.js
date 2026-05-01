@@ -57,6 +57,7 @@ exports.login = async (req, res, next) => {
         }
 
         sendTokenResponse(user, 200, res);
+    //   res.send('Login successful'); // Temporary response for testing
     } catch (err) {
         next(err);
     }
