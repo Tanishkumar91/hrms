@@ -14,10 +14,6 @@ A full-stack MERN application for managing employees, attendance, leaves, payrol
 - Smart alerts for pending approvals, missed attendance, and upcoming deadlines.
 - Role-based notifications for HR and employees.
 - Notification history panel for tracking all system activities.
-- Automated email notifications for employees when:<br/>
-          -Leave requests are approved or rejected<br/>
-          -Payroll is processed<br/>
-          -Issues are resolved
 
 ## 🛠️ Setup Instructions
 
