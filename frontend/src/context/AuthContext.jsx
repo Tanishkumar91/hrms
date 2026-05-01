@@ -8,7 +8,8 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     const api = axios.create({
-        baseURL: 'http://localhost:5000/api',
+        // baseURL: 'http://localhost:5000/api',
+         baseURL: 'https://hrms-platform-jkdz.onrender.com/api',
         withCredentials: true
     });
 

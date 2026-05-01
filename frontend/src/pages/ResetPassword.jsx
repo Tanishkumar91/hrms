@@ -26,7 +26,7 @@ const ResetPassword = () => {
 
         setIsLoading(true);
         try {
-            const res = await axios.put(`http://localhost:5000/api/auth/reset-password/${token}`, { password });
+            const res = await axios.put(`https://hrms-platform-jkdz.onrender.com/api/auth/reset-password/${token}`, { password });
             setMessage(res.data.message);
             setTimeout(() => navigate('/login'), 3000);
         } catch (err) {
